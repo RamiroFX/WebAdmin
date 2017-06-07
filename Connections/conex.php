@@ -1,7 +1,7 @@
 <?php
 
 $hostname = "localhost";
-$database = "bakermanager";
+$database = "genericdb";
 $username = "root";
 $password = "";
 $conex = mysqli_connect($hostname, $username, $password, $database);

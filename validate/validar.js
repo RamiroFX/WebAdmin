@@ -28,7 +28,7 @@ $(function () {
             var dataString = 'email=' + $('#email').val() + '&password=' + $('#password').val() + '&formid=1';
             $.ajax({
                 type: "POST",
-                url: "include/conectar.php",
+                url: "includes/conectar.php",
                 data: dataString,
                 success: function (msj) {
                     if (msj == 1) {
