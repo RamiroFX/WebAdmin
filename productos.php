@@ -129,6 +129,9 @@ $total_row_productos = mysqli_num_rows($productos);
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Productos</h1>
+                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                            Agregar producto
+                        </button>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -146,6 +149,7 @@ $total_row_productos = mysqli_num_rows($productos);
                                         <tr>
                                             <th>Producto</th>
                                             <th>Stock</th>
+                                            <th>Precio</th>
                                             <th>Categoría</th>
                                             <th>Estado</th>
                                             <th>Acciones</th>
@@ -156,31 +160,37 @@ $total_row_productos = mysqli_num_rows($productos);
                                             <tr class="odd gradeX">
                                                 <td> <?php echo $row_productos['descripcion']; ?> </td>
                                                 <td> <?php echo $row_productos['cant_actual']; ?> </td>
+                                                <td><form action="actualizarPrecio.php" method="post">
+                                                        <input name="precio" type="text" size="5" value="<?php echo $row_productos['precio_minorista']; ?>" >
+                                                        <button type="submit"><i class="fa fa-refresh"></i></button>
+                                                        <input name="id_producto"type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
+                                                        <input name="actualiza"type="hidden" value="2">
+                                                    </form></td>
                                                 <td> <?php echo $row_productos['categoria']; ?> </td>
                                                 <td class="center">
-                                                    <?php if ($row_productos['id_estado_producto'] == 1) { ?>
+                                                    <?php if ($row_productos['id_producto_estado'] == 1) { ?>
                                                         <form action="actualizarEstado.php" method="post">
-                                                            <button type="submit" class="btn btn-success"><?php obtenerEstado($row_productos['id_estado_producto']); ?></td></button>
+                                                            <button type="submit" class="btn btn-success"><?php obtenerEstado($row_productos['id_producto_estado']); ?></td></button>
                                                             <input name="id_producto" type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
                                                             <input name="actualiza" type="hidden" value="1">
-                                                            <input name="id_estado_producto" type="hidden" value="2">
+                                                            <input name="id_producto_estado" type="hidden" value="2">
                                                         </form>
                                                     <?php } ?>
-                                                    <?php if ($row_productos['id_estado_producto'] == 2) { ?>
+                                                    <?php if ($row_productos['id_producto_estado'] == 2) { ?>
                                                         <form action="actualizarEstado.php" method="post">
-                                                            <button type="submit" class="btn btn-danger"><?php obtenerEstado($row_productos['id_estado_producto']); ?></td></button>
+                                                            <button type="submit" class="btn btn-danger"><?php obtenerEstado($row_productos['id_producto_estado']); ?></td></button>
                                                             <input name="id_producto" type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
                                                             <input name="actualiza" type="hidden" value="1">
-                                                            <input name="id_estado_producto" type="hidden" value="1">
+                                                            <input name="id_producto_estado" type="hidden" value="1">
                                                         </form>
-                                        <?php } ?>
-                                        <td class="center">
-                                            <button type="button" class="btn btn-info"><i class="fa fa-file-image-o"></i></button>
-                                            <button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i></button>
-                                            <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                        </td>
-                                        </tr>
-                                    <?php } while ($row_productos = mysqli_fetch_assoc($productos)); ?>
+                                                    <?php } ?>
+                                                <td class="center">
+                                                    <button type="button" class="btn btn-info"><i class="fa fa-file-image-o"></i></button>
+                                                    <button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i></button>
+                                                    <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                                </td>
+                                            </tr>
+                                        <?php } while ($row_productos = mysqli_fetch_assoc($productos)); ?>
                                     </tbody>
                                 </table>
                                 <!-- /.table-responsive -->
@@ -217,7 +227,7 @@ $total_row_productos = mysqli_num_rows($productos);
 
         <!-- Page-Level Demo Scripts - Tables - Use for reference -->
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('#dataTables-example').DataTable({
                     responsive: true
                 });

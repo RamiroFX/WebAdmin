@@ -75,11 +75,11 @@ if (!function_exists("GetSQLValueString")) {
     }
 
 }
-if ((isset($_POST['actualiza'])) && ($_POST['actualiza'] == "1")) {
+if ((isset($_POST['actualiza'])) && ($_POST['actualiza'] == "2")) {
     $id_producto = $_POST['id_producto'];
-    $id_estado = $_POST['id_producto_estado'];
-    $SQL = sprintf("UPDATE  PRODUCTO SET ID_PRODUCTO_ESTADO = %s WHERE ID_PRODUCTO = %s", 
-            GetSQLValueString($id_estado, "int"), GetSQLValueString($id_producto, "int"));
+    $precio = $_POST['precio'];
+    $SQL = sprintf("UPDATE  PRODUCTO SET precio_minorista = %s WHERE ID_PRODUCTO = %s", 
+            GetSQLValueString($precio, "double"), GetSQLValueString($id_producto, "int"));
 
     $result = mysqli_query($conex, $SQL) or die(mysqli_error($conex));
 
