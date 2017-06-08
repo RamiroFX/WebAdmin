@@ -11,9 +11,9 @@ mysqli_set_charset($conex, 'utf8');
 ?>
 <?php
 
-/* if (is_file("includes/funciones.php")) {
-  include("includes/funciones.php");
-  } else {
-  include("../includes/funciones.php");
-  } */
+if (is_file("includes/funciones.php")) {
+    include("includes/funciones.php");
+} else {
+    include("../includes/funciones.php");
+}
 ?>

@@ -1,3 +1,46 @@
+<?php require_once 'Connections/conex.php'; ?>
+<?php
+if (!isset($_SESSION)) {
+    session_start();
+}
+$MM_authorizedUsers = "";
+$MM_doNotCheckAccess = "true";
+
+function isAuthorized($strUsers, $strGroups, $userName, $userGroup) {
+    $isValid = FALSE;
+
+    if (!empty($userName)) {
+        $arrUsers = explode(",", $strUsers);
+        $arrGroups = explode(",", $strGroups);
+        if (in_array($userName, $arrUsers)) {
+            $isValid = TRUE;
+        }
+        if (in_array($userGroup, $arrGroups)) {
+            $isValid = TRUE;
+        }
+        if (($strUsers == "") && TRUE) {
+            $isValid = TRUE;
+        }
+    }
+    return $isValid;
+}
+
+$MM_restrictGoTo = "error.php?error=1";
+if (!((isset($_SESSION['MM_idAdmin'])) &&
+        (isAuthorized("", $MM_authorizedUsers, $_SESSION['MM_idAdmin'], $_SESSION['MM_idAdmin'])))) {
+    /* $MM_qsChar = "?";
+      $MM_referrer = $_SERVER['PHP_SELF'];
+      if (strpos($MM_restrictGoTo, "?")) {
+      $MM_qsChar = "&";
+      }
+      if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) {
+      $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+      }
+      $MM_restrictGoTo = $MM_restrictGoTo . $$MM_qsChar . "accesscheck=" . urldecode($MM_referrer); */
+    header("Location: " . $MM_restrictGoTo);
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,7 +83,7 @@
         <div id="wrapper">
 
             <!-- Navigation -->
-        <?php include("includes/header.php"); ?>
+            <?php include("includes/header.php"); ?>
 
             <div id="page-wrapper">
                 <div class="row">

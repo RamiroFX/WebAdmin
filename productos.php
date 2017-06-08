@@ -1,5 +1,47 @@
 <?php require_once 'Connections/conex.php'; ?>
 <?php
+if (!isset($_SESSION)) {
+    session_start();
+}
+$MM_authorizedUsers = "";
+$MM_doNotCheckAccess = "true";
+
+function isAuthorized($strUsers, $strGroups, $userName, $userGroup) {
+    $isValid = FALSE;
+
+    if (!empty($userName)) {
+        $arrUsers = explode(",", $strUsers);
+        $arrGroups = explode(",", $strGroups);
+        if (in_array($userName, $arrUsers)) {
+            $isValid = TRUE;
+        }
+        if (in_array($userGroup, $arrGroups)) {
+            $isValid = TRUE;
+        }
+        if (($strUsers == "") && TRUE) {
+            $isValid = TRUE;
+        }
+    }
+    return $isValid;
+}
+
+$MM_restrictGoTo = "error.php?error=1";
+if (!((isset($_SESSION['MM_idAdmin'])) &&
+        (isAuthorized("", $MM_authorizedUsers, $_SESSION['MM_idAdmin'], $_SESSION['MM_idAdmin'])))) {
+    /* $MM_qsChar = "?";
+      $MM_referrer = $_SERVER['PHP_SELF'];
+      if (strpos($MM_restrictGoTo, "?")) {
+      $MM_qsChar = "&";
+      }
+      if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) {
+      $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+      }
+      $MM_restrictGoTo = $MM_restrictGoTo . $$MM_qsChar . "accesscheck=" . urldecode($MM_referrer); */
+    header("Location: " . $MM_restrictGoTo);
+    exit();
+}
+?>
+<?php
 if (!function_exists("GetSQLValueString")) {
 
     function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") {
@@ -104,8 +146,8 @@ $total_row_productos = mysqli_num_rows($productos);
                                         <tr>
                                             <th>Producto</th>
                                             <th>Stock</th>
-                                            <th>Estado</th>
                                             <th>Categoría</th>
+                                            <th>Estado</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -115,15 +157,30 @@ $total_row_productos = mysqli_num_rows($productos);
                                                 <td> <?php echo $row_productos['descripcion']; ?> </td>
                                                 <td> <?php echo $row_productos['cant_actual']; ?> </td>
                                                 <td> <?php echo $row_productos['categoria']; ?> </td>
-                                                <td class="center"><?php echo $row_productos['estado']; ?></td>
                                                 <td class="center">
-                                                    
-                                                    <button type="button" class="btn btn-info">Agregar imagen</button>
-                                                    <button type="button" class="btn btn-warning">Warning</button>
-                                                    <button type="button" class="btn btn-danger">PIRO MBA'E</button>
-                                                </td>
-                                            </tr>
-                                        <?php } while ($row_productos = mysqli_fetch_assoc($productos)); ?>
+                                                    <?php if ($row_productos['id_estado_producto'] == 1) { ?>
+                                                        <form action="actualizarEstado.php" method="post">
+                                                            <button type="submit" class="btn btn-success"><?php obtenerEstado($row_productos['id_estado_producto']); ?></td></button>
+                                                            <input name="id_producto" type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
+                                                            <input name="actualiza" type="hidden" value="1">
+                                                            <input name="id_estado_producto" type="hidden" value="2">
+                                                        </form>
+                                                    <?php } ?>
+                                                    <?php if ($row_productos['id_estado_producto'] == 2) { ?>
+                                                        <form action="actualizarEstado.php" method="post">
+                                                            <button type="submit" class="btn btn-danger"><?php obtenerEstado($row_productos['id_estado_producto']); ?></td></button>
+                                                            <input name="id_producto" type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
+                                                            <input name="actualiza" type="hidden" value="1">
+                                                            <input name="id_estado_producto" type="hidden" value="1">
+                                                        </form>
+                                        <?php } ?>
+                                        <td class="center">
+                                            <button type="button" class="btn btn-info"><i class="fa fa-file-image-o"></i></button>
+                                            <button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i></button>
+                                            <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                        </td>
+                                        </tr>
+                                    <?php } while ($row_productos = mysqli_fetch_assoc($productos)); ?>
                                     </tbody>
                                 </table>
                                 <!-- /.table-responsive -->
@@ -160,7 +217,7 @@ $total_row_productos = mysqli_num_rows($productos);
 
         <!-- Page-Level Demo Scripts - Tables - Use for reference -->
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('#dataTables-example').DataTable({
                     responsive: true
                 });
