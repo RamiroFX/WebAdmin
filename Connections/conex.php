@@ -10,7 +10,6 @@ ini_set("display_errors", 1);
 mysqli_set_charset($conex, 'utf8');
 ?>
 <?php
-
 if (is_file("includes/funciones.php")) {
     include("includes/funciones.php");
 } else {

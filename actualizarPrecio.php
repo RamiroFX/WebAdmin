@@ -29,15 +29,6 @@ function isAuthorized($strUsers, $strGroups, $userName, $userGroup) {
 $MM_restrictGoTo = "error.php?error=1";
 if (!((isset($_SESSION['MM_idAdmin'])) &&
         (isAuthorized("", $MM_authorizedUsers, $_SESSION['MM_idAdmin'], $_SESSION['MM_idAdmin'])))) {
-    /* $MM_qsChar = "?";
-      $MM_referrer = $_SERVER['PHP_SELF'];
-      if (strpos($MM_restrictGoTo, "?")) {
-      $MM_qsChar = "&";
-      }
-      if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) {
-      $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
-      }
-      $MM_restrictGoTo = $MM_restrictGoTo . $$MM_qsChar . "accesscheck=" . urldecode($MM_referrer); */
     header("Location: " . $MM_restrictGoTo);
     exit();
 }

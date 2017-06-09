@@ -1,4 +1,4 @@
-<?php require_once 'Connections/conex.php'; ?>
+<?php require_once("Connections/conex.php"); ?>
 <?php
 if (!isset($_SESSION)) {
     session_start();
@@ -28,15 +28,6 @@ function isAuthorized($strUsers, $strGroups, $userName, $userGroup) {
 $MM_restrictGoTo = "error.php?error=1";
 if (!((isset($_SESSION['MM_idAdmin'])) &&
         (isAuthorized("", $MM_authorizedUsers, $_SESSION['MM_idAdmin'], $_SESSION['MM_idAdmin'])))) {
-    /* $MM_qsChar = "?";
-      $MM_referrer = $_SERVER['PHP_SELF'];
-      if (strpos($MM_restrictGoTo, "?")) {
-      $MM_qsChar = "&";
-      }
-      if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) {
-      $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
-      }
-      $MM_restrictGoTo = $MM_restrictGoTo . $$MM_qsChar . "accesscheck=" . urldecode($MM_referrer); */
     header("Location: " . $MM_restrictGoTo);
     exit();
 }
@@ -77,6 +68,11 @@ $SQL = "SELECT * FROM PRODUCTO ORDER BY DESCRIPCION ASC";
 $productos = mysqli_query($conex, $SQL) or die(mysqli_error($conex));
 $row_productos = mysqli_fetch_assoc($productos);
 $total_row_productos = mysqli_num_rows($productos);
+
+$SQL_CATEGORIA = "SELECT * FROM PRODUCTO_CATEGORIA ORDER BY ID_PRODUCTO_CATEGORIA ASC";
+$productos_CATEGORIA = mysqli_query($conex, $SQL_CATEGORIA) or die(mysqli_error($conex));
+$row_CATEGORIA = mysqli_fetch_assoc($productos_CATEGORIA);
+$total_row_CATEGORIA = mysqli_num_rows($productos_CATEGORIA);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -118,7 +114,7 @@ $total_row_productos = mysqli_num_rows($productos);
 
     </head>
 
-    <body>
+    <body onload="verProducto()">
 
         <div id="wrapper">
 
@@ -129,85 +125,74 @@ $total_row_productos = mysqli_num_rows($productos);
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Productos</h1>
-                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#agregarProducto">
                             Agregar producto
                         </button>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Listado de productos
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Producto</th>
-                                            <th>Stock</th>
-                                            <th>Precio</th>
-                                            <th>Categoría</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?PHP do { ?>
-                                            <tr class="odd gradeX">
-                                                <td> <?php echo $row_productos['descripcion']; ?> </td>
-                                                <td> <?php echo $row_productos['cant_actual']; ?> </td>
-                                                <td><form action="actualizarPrecio.php" method="post">
-                                                        <input name="precio" type="text" size="5" value="<?php echo $row_productos['precio_minorista']; ?>" >
-                                                        <button type="submit"><i class="fa fa-refresh"></i></button>
-                                                        <input name="id_producto"type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
-                                                        <input name="actualiza"type="hidden" value="2">
-                                                    </form></td>
-                                                <td> <?php echo $row_productos['categoria']; ?> </td>
-                                                <td class="center">
-                                                    <?php if ($row_productos['id_producto_estado'] == 1) { ?>
-                                                        <form action="actualizarEstado.php" method="post">
-                                                            <button type="submit" class="btn btn-success"><?php obtenerEstado($row_productos['id_producto_estado']); ?></td></button>
-                                                            <input name="id_producto" type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
-                                                            <input name="actualiza" type="hidden" value="1">
-                                                            <input name="id_producto_estado" type="hidden" value="2">
-                                                        </form>
-                                                    <?php } ?>
-                                                    <?php if ($row_productos['id_producto_estado'] == 2) { ?>
-                                                        <form action="actualizarEstado.php" method="post">
-                                                            <button type="submit" class="btn btn-danger"><?php obtenerEstado($row_productos['id_producto_estado']); ?></td></button>
-                                                            <input name="id_producto" type="hidden" value="<?php echo $row_productos['id_producto']; ?>">
-                                                            <input name="actualiza" type="hidden" value="1">
-                                                            <input name="id_producto_estado" type="hidden" value="1">
-                                                        </form>
-                                                    <?php } ?>
-                                                <td class="center">
-                                                    <button type="button" class="btn btn-info"><i class="fa fa-file-image-o"></i></button>
-                                                    <button type="button" class="btn btn-warning"><i class="fa fa-pencil-square-o"></i></button>
-                                                    <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                                </td>
-                                            </tr>
-                                        <?php } while ($row_productos = mysqli_fetch_assoc($productos)); ?>
-                                    </tbody>
-                                </table>
-                                <!-- /.table-responsive -->
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-                        <!-- /.panel -->
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
+                <div id="verProductos"></div>
 
             </div>
             <!-- /#page-wrapper -->
 
         </div>
         <!-- /#wrapper -->
-
+        <div class="modal fade" id="agregarProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form name="form_add_product" id="form_add_product">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Agregar producto</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                                <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label>Nombre de producto</label>
+                                            <input class="form-control" name="prod_nombre" id="prod_nombre">
+                                        </div>
+                                    </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Precio</label>
+                                            <input class="form-control" name="prod_precio" id="prod_precio">
+                                        </div>
+                                    </div>
+                                <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label>Stock</label>
+                                            <input class="form-control" name="prod_stock" id="prod_stock">
+                                        </div>
+                                    </div>
+                        </div>
+                        <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Categorías</label>
+                                        <select class="form-control" id="prod_id_categoria" name="prod_id_categoria">
+                                            <?PHP do{?>
+                                            <option value="<?PHP echo $row_CATEGORIA['id_producto_categoria'];?>"><?PHP echo $row_CATEGORIA['descripcion'];?></option>
+                                            <?PHP }while ($row_CATEGORIA = mysqli_fetch_assoc($productos_CATEGORIA));?>
+                                        </select>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" id="agregar">Guardar</button>
+                    </div>
+                </div>
+                </form>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
         <!-- jQuery -->
         <script src="vendor/jquery/jquery.min.js"></script>
 
@@ -225,14 +210,8 @@ $total_row_productos = mysqli_num_rows($productos);
         <!-- Custom Theme JavaScript -->
         <script src="dist/js/sb-admin-2.js"></script>
 
-        <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-        <script>
-            $(document).ready(function() {
-                $('#dataTables-example').DataTable({
-                    responsive: true
-                });
-            });
-        </script>
+        <script src="js/scripts.js"></script>
+        
 
     </body>
 
