@@ -175,6 +175,7 @@ $total_row_CATEGORIA = mysqli_num_rows($productos_CATEGORIA);
                                     <div class="form-group">
                                         <label>Categorías</label>
                                         <select class="form-control" id="prod_id_categoria" name="prod_id_categoria">
+                                            <option value="">Seleccione una categoria</option>
                                             <?PHP do{?>
                                             <option value="<?PHP echo $row_CATEGORIA['id_producto_categoria'];?>"><?PHP echo $row_CATEGORIA['descripcion'];?></option>
                                             <?PHP }while ($row_CATEGORIA = mysqli_fetch_assoc($productos_CATEGORIA));?>
@@ -210,6 +211,8 @@ $total_row_CATEGORIA = mysqli_num_rows($productos_CATEGORIA);
         <!-- Custom Theme JavaScript -->
         <script src="dist/js/sb-admin-2.js"></script>
 
+        <script src="validate/jquery.validate.js"></script>
+        
         <script src="js/scripts.js"></script>
         
 
