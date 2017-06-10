@@ -33,29 +33,14 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
 }
 ?>
 <?php
-$SQL = "SELECT * FROM PRODUCTO ORDER BY DESCRIPCION ASC";
-$productos = $conex->prepare($SQL);
-$productos->execute();
-$row_productos = $productos->fetch(PDO::FETCH_ASSOC);
-$total_row_productos = $productos->rowCount();
-
 $SQL_CATEGORIA = "SELECT * FROM PRODUCTO_CATEGORIA ORDER BY ID_PRODUCTO_CATEGORIA ASC";
-$productos_CATEGORIA = $conex->prepare($SQL_CATEGORIA);
-$productos_CATEGORIA->execute();
-$row_CATEGORIA = $productos_CATEGORIA->fetch(PDO::FETCH_ASSOC);
-$total_row_CATEGORIA = $productos_CATEGORIA->rowCount();
+$productos_CATEGORIA = $conex->query($SQL_CATEGORIA)->fetchAll(PDO::FETCH_ASSOC);
 
 $SQL_MARCA = "SELECT * FROM MARCA ORDER BY ID_MARCA ASC";
-$productos_MARCA = $conex->prepare($SQL_MARCA);
-$productos_MARCA->execute();
-$row_MARCA = $productos_MARCA->fetch(PDO::FETCH_ASSOC);
-$total_row_MARCA = $productos_MARCA->rowCount();
+$productos_MARCA = $conex->query($SQL_MARCA)->fetchAll(PDO::FETCH_ASSOC);
 
 $SQL_IMPUESTO = "SELECT * FROM IMPUESTO ORDER BY ID_IMPUESTO ASC";
-$productos_IMPUESTO = $conex->prepare($SQL_IMPUESTO);
-$productos_IMPUESTO->execute();
-$row_IMPUESTO = $productos_IMPUESTO->fetch(PDO::FETCH_ASSOC);
-$total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
+$productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +110,7 @@ $total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
         <!-- /#wrapper -->
         <div class="modal fade" id="agregarProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form name="form_add_product" id="form_add_product">
+                <form name="form_add_product" id="form_add_product" >
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -136,7 +121,7 @@ $total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label>Nombre de producto</label>
-                                        <input class="form-control" name="DESCRIPCION" id="DESCRIPCION">
+                                        <input class="form-control" name="C_DESCRIPCION" id="C_DESCRIPCION">
                                     </div>
                                 </div>
                             </div>
@@ -144,17 +129,19 @@ $total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Código</label>
-                                        <input class="form-control" name="CODIGO" id="CODIGO">
+                                        <input class="form-control" name="C_CODIGO" id="C_CODIGO">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Impuesto</label>
-                                        <select class="form-control" name="ID_IMPUESTO" id="ID_IMPUESTO" >
+                                        <select class="form-control" name="C_ID_IMPUESTO" id="C_ID_IMPUESTO" >
                                             <option value="">Seleccione un impuesto</option>
-                                            <?PHP do { ?>
-                                                <option value="<?PHP echo $row_IMPUESTO['id_impuesto']; ?>"><?PHP echo $row_IMPUESTO['descripcion'] . '%'; ?></option>
-                                            <?PHP } while ($row_IMPUESTO = $productos_IMPUESTO->fetch(PDO::FETCH_ASSOC)); ?>
+                                            <?PHP
+                                            foreach ($productos_IMPUESTO as $value) {
+                                                echo ('<option value="' . $value['id_impuesto'] . '" >' . $value['descripcion'] . '%' . '</option>');
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -163,13 +150,13 @@ $total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Precio de costo</label>
-                                        <input class="form-control" name="PRECIO_COSTO" id="PRECIO_COSTO">
+                                        <input class="form-control" name="C_PRECIO_COSTO" id="C_PRECIO_COSTO">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Stock</label>
-                                        <input class="form-control" name="CANT_ACTUAL" id="CANT_ACTUAL">
+                                        <input class="form-control" name="C_CANT_ACTUAL" id="C_CANT_ACTUAL">
                                     </div>
                                 </div>
                             </div>
@@ -177,13 +164,13 @@ $total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Precio de venta</label>
-                                        <input class="form-control" name="PRECIO_MINORISTA" id="PRECIO_MINORISTA">
+                                        <input class="form-control" name="C_PRECIO_MINORISTA" id="C_PRECIO_MINORISTA">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Precio mayorista</label>
-                                        <input class="form-control" name="PRECIO_MAYORISTA" id="PRECIO_MAYORISTA">
+                                        <input class="form-control" name="C_PRECIO_MAYORISTA" id="C_PRECIO_MAYORISTA">
                                     </div>
                                 </div>
                             </div>
@@ -191,22 +178,26 @@ $total_row_IMPUESTO = $productos_IMPUESTO->rowCount();
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Categorías</label>
-                                        <select class="form-control" name="ID_CATEGORIA" id="ID_CATEGORIA" >
+                                        <select class="form-control" name="C_ID_CATEGORIA" id="C_ID_CATEGORIA" >
                                             <option value="">Seleccione una categoria</option>
-                                            <?PHP do { ?>
-                                                <option value="<?PHP echo $row_CATEGORIA['id_producto_categoria']; ?>"><?PHP echo $row_CATEGORIA['descripcion']; ?></option>
-                                            <?PHP } while ($row_CATEGORIA = $productos_CATEGORIA->fetch(PDO::FETCH_ASSOC)); ?>
+                                            <?PHP
+                                            foreach ($productos_CATEGORIA as $value) {
+                                                echo ('<option value="' . $value['id_producto_categoria'] . '" >' . $value['descripcion'] . '</option>');
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Marcas</label>
-                                        <select class="form-control" id="ID_MARCA" name="ID_MARCA">
+                                        <select class="form-control" id="C_ID_MARCA" name="C_ID_MARCA">
                                             <option value="">Seleccione una marca</option>
-                                            <?PHP do { ?>
-                                                <option value="<?PHP echo $row_MARCA['id_marca']; ?>"><?PHP echo $row_MARCA['descripcion']; ?></option>
-                                            <?PHP } while ($row_MARCA = $productos_MARCA->fetch(PDO::FETCH_ASSOC)); ?>
+                                            <?PHP
+                                            foreach ($productos_MARCA as $value) {
+                                                echo ('<option value="' . $value['id_marca'] . '" >' . $value['descripcion'] . '</option>');
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>

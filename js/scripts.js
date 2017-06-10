@@ -1,13 +1,13 @@
 $('#agregarProducto').on('hidden.bs.modal',function(e){
-    $('#DESCRIPCION').val('');
-    $('#CODIGO').val('');
-    $('#ID_MARCA').val('');
-    $('#ID_IMPUESTO').val('');
-    $('#ID_CATEGORIA').val('');
-    $('#PRECIO_COSTO').val('');
-    $('#PRECIO_MINORISTA').val('');
-    $('#PRECIO_MAYORISTA').val('');
-    $('#CANT_ACTUAL').val('');
+    $('#C_DESCRIPCION').val('');
+    $('#C_CODIGO').val('');
+    $('#C_ID_MARCA').val('');
+    $('#C_ID_IMPUESTO').val('');
+    $('#C_ID_CATEGORIA').val('');
+    $('#C_PRECIO_COSTO').val('');
+    $('#C_PRECIO_MINORISTA').val('');
+    $('#C_PRECIO_MAYORISTA').val('');
+    $('#C_CANT_ACTUAL').val('');
 } );
 
 function verProducto() {
@@ -21,26 +21,26 @@ function verProducto() {
 
 $('#form_add_product').validate({
     rules: {
-        DESCRIPCION: {
+        C_DESCRIPCION: {
             required: true,
             rangelength: [2, 50]
         },
-        CODIGO: {
+        C_CODIGO: {
             rangelength: [2, 30]
         },
-        PRECIO_MINORISTA: {
+        C_PRECIO_MINORISTA: {
             required: true,
             number: true
         },
-        PRECIO_COSTO: {
+        C_PRECIO_COSTO: {
             required: true,
             number: true
         },
-        PRECIO_MAYORISTA: {
+        C_PRECIO_MAYORISTA: {
             required: true,
             number: true
         },
-        CANT_ACTUAL: {
+        C_CANT_ACTUAL: {
             required: true,
             number: true
         },
@@ -48,40 +48,40 @@ $('#form_add_product').validate({
             required: true,
             number: true
         },*/
-        ID_CATEGORIA: {
+        C_ID_CATEGORIA: {
             required: true,
             number: true
         },
-        ID_MARCA: {
+        C_ID_MARCA: {
             required: true,
             number: true
         },
-        ID_IMPUESTO: {
+        C_ID_IMPUESTO: {
             required: true,
             number: true
         }
     },
     messages: {
-        DESCRIPCION: {
+        C_DESCRIPCION: {
             required: "Ingrese el nombre del producto",
             rangelength: "Por favor, ingrese un valor entre 2 y 50 caracteres"
         },
-        CODIGO: {
+        C_CODIGO: {
             rangelength: "Por favor, ingrese un valor entre 2 y 30 caracteres"
         },
-        PRECIO_MINORISTA: {
+        C_PRECIO_MINORISTA: {
             required: "Ingrese el precio de venta",
             number: "Por favor, ingrese solo números"
         },
-        PRECIO_COSTO: {
+        C_PRECIO_COSTO: {
             required: "Ingrese el precio de costo",
             number: "Por favor, ingrese solo números"
         },
-        PRECIO_MAYORISTA: {
+        C_PRECIO_MAYORISTA: {
             required: "Ingrese el precio mayorista",
             number: "Por favor, ingrese solo números"
         },
-        CANT_ACTUAL: {
+        C_CANT_ACTUAL: {
             required: "Ingrese el stock inicial",
             number: "Por favor, ingrese solo números"
         },
@@ -89,30 +89,30 @@ $('#form_add_product').validate({
             required: "Seleccione un estado",
             number: "Por favor, ingrese solo números"
         },*/
-        ID_CATEGORIA: {
+        C_ID_CATEGORIA: {
             required: "Seleccione una categoría",
             number: "Por favor, ingrese solo números"
         },
-        ID_MARCA: {
+        C_ID_MARCA: {
             required: "Seleccione una marca",
             number: "Por favor, ingrese solo números"
         },
-        ID_IMPUESTO: {
+        C_ID_IMPUESTO: {
             required: "Seleccione un impuesto",
             number: "Por favor, ingrese solo números"
         }
     },
     submitHandler: function(form) {
-        var dataString = 'DESCRIPCION=' + $('#DESCRIPCION').val()
-                + '&CODIGO=' + $('#CODIGO').val()
+        var dataString = 'C_DESCRIPCION=' + $('#C_DESCRIPCION').val()
+                + '&C_CODIGO=' + $('#C_CODIGO').val()
                 //+ '&ID_ESTADO=' + $('#ID_ESTADO').val()
-                + '&ID_MARCA=' + $('#ID_MARCA').val()
-                + '&ID_IMPUESTO=' + $('#ID_IMPUESTO').val()
-                + '&ID_CATEGORIA=' + $('#ID_CATEGORIA').val()
-                + '&PRECIO_COSTO=' + $('#PRECIO_COSTO').val()
-                + '&PRECIO_MINORISTA=' + $('#PRECIO_MINORISTA').val()
-                + '&PRECIO_MAYORISTA=' + $('#PRECIO_MAYORISTA').val()
-                + '&CANT_ACTUAL=' + $('#CANT_ACTUAL').val()
+                + '&C_ID_MARCA=' + $('#C_ID_MARCA').val()
+                + '&C_ID_IMPUESTO=' + $('#C_ID_IMPUESTO').val()
+                + '&C_ID_CATEGORIA=' + $('#C_ID_CATEGORIA').val()
+                + '&C_PRECIO_COSTO=' + $('#C_PRECIO_COSTO').val()
+                + '&C_PRECIO_MINORISTA=' + $('#C_PRECIO_MINORISTA').val()
+                + '&C_PRECIO_MAYORISTA=' + $('#C_PRECIO_MAYORISTA').val()
+                + '&C_CANT_ACTUAL=' + $('#C_CANT_ACTUAL').val()
                 + '&agregar_producto=1';
         $.ajax({
             type: "POST",
@@ -125,3 +125,26 @@ $('#form_add_product').validate({
         });
     }
 });
+
+function actualizarProducto(idProducto){
+/*
+ * $('#').val('');
+    $('#').val('');
+    $('#').val('');
+    $('#').val('');
+    $('#').val('');
+    $('#').val('');
+    $('#').val('');
+    $('#').val('');
+    $('#').val('');
+ */
+    var ID =idProducto;
+    var DESCRIPCION = $('#form_update_product'.idProducto).find('input[name="DESCRIPCION"]').val();
+    var CODIGO= $('#form_update_product'.idProducto).find('input[name="CODIGO"]').val();
+    var ID_IMPUESTO = $('#form_update_product'.idProducto).find('input[name="ID_IMPUESTO"]').val();
+    var ID_CATEGORIA = $('#form_update_product'.idProducto).find('input[name="ID_CATEGORIA"]').val();
+    var PRECIO_COSTO = $('#form_update_product'.idProducto).find('input[name="PRECIO_COSTO"]').val();
+    var PRECIO_MINORISTA = $('#form_update_product'.idProducto).find('input[name="PRECIO_MINORISTA"]').val();
+    var PRECIO_MAYORISTA = $('#form_update_product'.idProducto).find('input[name="PRECIO_MAYORISTA"]').val();
+    var CANT_ACTUAL = $('#form_update_product'.idProducto).find('input[name="CANT_ACTUAL"]').val();
+}
