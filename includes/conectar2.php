@@ -13,7 +13,7 @@ if ((isset($_POST['formid'])) && (isset($_POST['formid']) == 1)) {
         session_start();
     }
 
-    $sql = 'SELECT * FROM users WHERE email = :email AND status=:status';
+    $sql = 'SELECT * FROM FUNCIONARIO WHERE EMAIL = :email AND PASSWORD = :password';
     $stmt = $conex->prepare($sql);
     $stmt->execute([$UserEmail, $UserPassword]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -29,7 +29,7 @@ if ((isset($_POST['formid'])) && (isset($_POST['formid']) == 1)) {
         }
         $_SESSION['MM_UsernameAdmin'] = $UserEmail;
         $_SESSION['MM_UserGroupAdmin'] = $loginStrGroup;
-        $_SESSION['MM_idAdmin'] = $user['id_admin'];
+        $_SESSION['MM_idAdmin'] = $user['id_funcionario'];
     }
     echo $loginFoundUser;
 }

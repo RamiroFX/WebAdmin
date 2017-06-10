@@ -1,4 +1,4 @@
-<?php require_once 'Connections/conex.php'; ?>
+<?php require_once 'Connections/conex2.php'; ?>
 <?php
 
 if (!isset($_SESSION)) {
@@ -35,43 +35,11 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
 ?>
 <?php
 
-if (!function_exists("GetSQLValueString")) {
-
-    function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") {
-
-        if (PHP_VERSION < 6) {
-            $theValue = get_magic_quotes_gpc() ? stripcslashes($theValue) : $theValue;
-        }
-        global $conex;
-        $theValue = function_exists("mysqli_real_escape_string") ? mysqli_real_escape_string($conex, $theValue) : mysqli_escape_string($conex, $theValue);
-        switch ($theType) {
-            case "text":
-                $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-                break;
-            case "long":
-            case "int":
-                $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-                break;
-            case "double":
-                $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-                break;
-            case "date":
-                $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-                break;
-            case "defined":
-                $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-                break;
-        }
-        return $theValue;
-    }
-
-}
 if ((isset($_POST['actualiza'])) && ($_POST['actualiza'] == "1")) {
     $id_producto = $_POST['id_producto'];
     $id_estado = $_POST['id_producto_estado'];
-    $SQL = sprintf("UPDATE  PRODUCTO SET ID_PRODUCTO_ESTADO = %s WHERE ID_PRODUCTO = %s", 
-            GetSQLValueString($id_estado, "int"), GetSQLValueString($id_producto, "int"));
-    $result = mysqli_query($conex, $SQL) or die(mysqli_error($conex));
+    $SQL = "UPDATE  PRODUCTO SET ID_ESTADO = :id_estado WHERE ID_PRODUCTO = :id_producto";
+    $conex->prepare($SQL)->execute([$id_estado,$id_producto]);
 
     $updateToGo = "productos.php";
     header(sprintf("Location: %s", $updateToGo));

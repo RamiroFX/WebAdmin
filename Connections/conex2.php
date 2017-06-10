@@ -6,9 +6,9 @@ $dbname = 'bakermanagerdev';
 $host = 'localhost';
 try {
     $conex = new PDO("pgsql:dbname=$dbname;host=$host", $dbuser, $dbpassword, [
-       PDO::ATTR_EMULATE_PREPARES => false, 
-       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-     ]); 
+        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
 } catch (PDOException $e) {
     echo "Error : " . $e->getMessage() . "<br/>";
     die();
@@ -16,9 +16,10 @@ try {
 ?>
 
 <?php
-if (is_file("includes/funciones.php")) {
-    include("includes/funciones.php");
+
+if (is_file("includes/funciones2.php")) {
+    include("includes/funciones2.php");
 } else {
-    include("../includes/funciones.php");
+    include("../includes/funciones2.php");
 }
 ?>
