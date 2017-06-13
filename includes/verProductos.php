@@ -1,6 +1,6 @@
 <?php require_once("../Connections/conex2.php"); ?>
 <?php
-$SQL = "SELECT PROD.ID_PRODUCTO \"ID\", PROD.DESCRIPCION \"descripcion\", "
+$SQL_PRODUCTOS = "SELECT PROD.ID_PRODUCTO \"ID\", PROD.DESCRIPCION \"descripcion\", "
         . "PROD.CODIGO \"codigo\", "
         . "(SELECT MARC.DESCRIPCION FROM MARCA MARC WHERE MARC.ID_MARCA = PROD.ID_MARCA)\"marca\", "
         . "(SELECT IMPU.DESCRIPCION FROM IMPUESTO IMPU WHERE IMPU.ID_IMPUESTO = PROD.ID_IMPUESTO)\"impuesto\", "
@@ -11,11 +11,10 @@ $SQL = "SELECT PROD.ID_PRODUCTO \"ID\", PROD.DESCRIPCION \"descripcion\", "
         . "(SELECT ESTA.DESCRIPCION FROM ESTADO ESTA WHERE ESTA.ID_ESTADO = PROD.ID_ESTADO)\"estado\", "
         . "PROD.CANT_ACTUAL \"stock\" "
         . "FROM PRODUCTO PROD ORDER BY PROD.DESCRIPCION";
-$productos = $conex->prepare($SQL);
-$productos->execute();
-$row_productos = $productos->fetch(PDO::FETCH_ASSOC);
-$total_row_productos = $productos->rowCount();
 
+$product_list = $conex->query($SQL_PRODUCTOS)->fetchAll(PDO::FETCH_ASSOC);
+//$total_row_productos = $product_list->rowCount();
+$total_row_productos = count($product_list);
 
 $SQL_CATEGORIA = "SELECT * FROM PRODUCTO_CATEGORIA ORDER BY ID_PRODUCTO_CATEGORIA ASC";
 $productos_CATEGORIA = $conex->query($SQL_CATEGORIA)->fetchAll(PDO::FETCH_ASSOC);
@@ -46,45 +45,45 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                         </tr>
                     </thead>
                     <tbody>
-                        <?PHP do { ?>
+                        <?PHP foreach ($product_list as $row => $link) { ?>
                             <tr class="odd gradeX">
-                                <td> <?php echo $row_productos['descripcion']; ?> </td>
-                                <td> <?php echo $row_productos['stock']; ?> </td>
+                                <td> <?php echo $link['descripcion']; ?> </td>
+                                <td> <?php echo $link['stock']; ?> </td>
                                 <td><form action="actualizarPrecio.php" method="post">
-                                        <input name="precio" type="text" size="5" value="<?php echo $row_productos['precio_minorista']; ?>" >
+                                        <input name="precio" type="text" size="5" value="<?php echo $link['precio_minorista']; ?>" >
                                         <button type="submit"><i class="fa fa-refresh"></i></button>
-                                        <input name="id_producto"type="hidden" value="<?php echo $row_productos['ID']; ?>">
+                                        <input name="id_producto"type="hidden" value="<?php echo $link['ID']; ?>">
                                         <input name="actualiza"type="hidden" value="2">
                                     </form></td>
-                                <td> <?php echo $row_productos['categoria']; ?> </td>
+                                <td> <?php echo $link['categoria']; ?> </td>
                                 <td class="center">
-                                    <?php if ($row_productos['estado'] == 'Activo') { ?>
+                                    <?php if ($link['estado'] == 'Activo') { ?>
                                         <form action="actualizarEstado.php" method="post">
-                                            <button type="submit" class="btn btn-success"><?php echo $row_productos['estado']; ?></button>
-                                            <input name="id_producto" type="hidden" value="<?php echo $row_productos['ID']; ?>">
+                                            <button type="submit" class="btn btn-success"><?php echo $link['estado']; ?></button>
+                                            <input name="id_producto" type="hidden" value="<?php echo $link['ID']; ?>">
                                             <input name="actualiza" type="hidden" value="1">
                                             <input name="id_producto_estado" type="hidden" value="2">
                                         </form>
                                     <?php } ?>
-                                    <?php if ($row_productos['estado'] == 'Inactivo') { ?>
+                                    <?php if ($link['estado'] == 'Inactivo') { ?>
                                         <form action="actualizarEstado.php" method="post">
-                                            <button type="submit" class="btn btn-danger"><?php echo $row_productos['estado']; ?></button>
-                                            <input name="id_producto" type="hidden" value="<?php echo $row_productos['ID']; ?>">
+                                            <button type="submit" class="btn btn-danger"><?php echo $link['estado']; ?></button>
+                                            <input name="id_producto" type="hidden" value="<?php echo $link['ID']; ?>">
                                             <input name="actualiza" type="hidden" value="1">
                                             <input name="id_producto_estado" type="hidden" value="1">
                                         </form>
                                     <?php } ?></td>
                                 <td class="center">
                                     <button type="button" class="btn btn-info"><i class="fa fa-file-image-o"></i></button>
-                                    <a data-toggle="modal" class="btn btn-warning" data-target ="#editarProducto<?php echo $row_productos['ID']; ?>">
+                                    <a data-toggle="modal" class="btn btn-warning" data-target ="#editarProducto<?php echo $link['ID']; ?>">
                                         <i class="fa fa-pencil-square-o"></i>
                                     </a>
                                     <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                 </td>
                             </tr>
-                        <div class="modal fade" id="editarProducto<?php echo $row_productos['ID']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="editarProducto<?php echo $link['ID']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
-                                <form name="form_update_product<?php echo $row_productos['ID']; ?>" id="form_add_product<?php echo $row_productos['ID']; ?>">
+                                <form name="form_update_product<?php echo $link['ID']; ?>" id="form_update_product<?php echo $link['ID']; ?>"  >
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -95,7 +94,7 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="col-lg-12">
                                                     <div class="form-group">
                                                         <label>Nombre de producto</label>
-                                                        <input class="form-control" name="DESCRIPCION" id="DESCRIPCION" value="<?php echo $row_productos['descripcion']; ?>">
+                                                        <input class="form-control" name="DESCRIPCION<?php echo $link['ID']; ?>" id="DESCRIPCION<?php echo $link['ID']; ?>" value="<?php echo $link['descripcion']; ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,17 +102,17 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Código</label>
-                                                        <input class="form-control" name="CODIGO" id="CODIGO" value="<?php echo $row_productos['codigo']; ?>">
+                                                        <input class="form-control" name="CODIGO<?php echo $link['ID']; ?>" id="CODIGO<?php echo $link['ID']; ?>" value="<?php echo $link['codigo']; ?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Impuesto</label>
-                                                        <select class="form-control" name="ID_IMPUESTO" id="ID_IMPUESTO" >
+                                                        <select class="form-control" name="ID_IMPUESTO<?php echo $link['ID']; ?>" id="ID_IMPUESTO<?php echo $link['ID']; ?>" >
                                                             <option value="">Seleccione un impuesto</option>
                                                             <?PHP
                                                             foreach ($productos_IMPUESTO as $value) {
-                                                                if ($row_productos['impuesto'] == $value['descripcion']) {
+                                                                if ($link['impuesto'] == $value['descripcion']) {
                                                                     echo ('<option value="' . $value['id_impuesto'] . '" selected >' . $value['descripcion'] . '%' . '</option>');
                                                                 } else {
                                                                     echo ('<option value="' . $value['id_impuesto'] . '" >' . $value['descripcion'] . '%' . '</option>');
@@ -128,13 +127,13 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Precio de costo</label>
-                                                        <input class="form-control" name="PRECIO_COSTO" id="PRECIO_COSTO" value="<?php echo $row_productos['precio_costo']; ?>">
+                                                        <input class="form-control" name="PRECIO_COSTO<?php echo $link['ID']; ?>" id="PRECIO_COSTO<?php echo $link['ID']; ?>" value="<?php echo $link['precio_costo']; ?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Stock</label>
-                                                        <input class="form-control" name="CANT_ACTUAL" id="CANT_ACTUAL" value="<?php echo $row_productos['stock']; ?>">
+                                                        <input class="form-control" name="CANT_ACTUAL<?php echo $link['ID']; ?>" id="CANT_ACTUAL<?php echo $link['ID']; ?>" value="<?php echo $link['stock']; ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -142,13 +141,13 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Precio de venta</label>
-                                                        <input class="form-control" name="PRECIO_MINORISTA" id="PRECIO_MINORISTA" value="<?php echo $row_productos['precio_minorista']; ?>">
+                                                        <input class="form-control" name="PRECIO_MINORISTA<?php echo $link['ID']; ?>" id="PRECIO_MINORISTA<?php echo $link['ID']; ?>" value="<?php echo $link['precio_minorista']; ?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Precio mayorista</label>
-                                                        <input class="form-control" name="PRECIO_MAYORISTA" id="PRECIO_MAYORISTA" value="<?php echo $row_productos['precio_mayorista']; ?>">
+                                                        <input class="form-control" name="PRECIO_MAYORISTA<?php echo $link['ID']; ?>" id="PRECIO_MAYORISTA<?php echo $link['ID']; ?>" value="<?php echo $link['precio_mayorista']; ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -156,11 +155,11 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Categorías</label>
-                                                        <select class="form-control" name="ID_CATEGORIA" id="ID_CATEGORIA" >
+                                                        <select class="form-control" name="ID_CATEGORIA<?php echo $link['ID']; ?>" id="ID_CATEGORIA<?php echo $link['ID']; ?>" >
                                                             <option value="">Seleccione una categoria</option>
                                                             <?PHP
                                                             foreach ($productos_CATEGORIA as $value) {
-                                                                if ($row_productos['categoria'] == $value['descripcion']) {
+                                                                if ($link['categoria'] == $value['descripcion']) {
                                                                     echo ('<option value="' . $value['id_producto_categoria'] . '" selected >' . $value['descripcion'] . '</option>');
                                                                 } else {
                                                                     echo ('<option value="' . $value['id_producto_categoria'] . '" >' . $value['descripcion'] . '</option>');
@@ -173,11 +172,11 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label>Marcas</label>
-                                                        <select class="form-control" id="ID_MARCA" name="ID_MARCA">
+                                                        <select class="form-control" id="ID_MARCA<?php echo $link['ID']; ?>" name="ID_MARCA<?php echo $link['ID']; ?>">
                                                             <option value="">Seleccione una marca</option>
                                                             <?PHP
                                                             foreach ($productos_MARCA as $value) {
-                                                                if ($row_productos['marca'] == $value['descripcion']) {
+                                                                if ($link['marca'] == $value['descripcion']) {
                                                                     echo ('<option value="' . $value['id_marca'] . '" selected >' . $value['descripcion'] . '</option>');
                                                                 } else {
                                                                     echo ('<option value="' . $value['id_marca'] . '" >' . $value['descripcion'] . '</option>');
@@ -191,7 +190,7 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                            <button type="button" onclick="actualizarProducto(<?php echo $row_productos['ID']; ?>)" class="btn btn-primary" id="agregar">Modificar</button>
+                                            <button type="button" onclick="actualizarProducto('<?php echo $link['ID']; ?>')" class="btn btn-primary" id="botonModificar">Modificar</button>
                                         </div>
                                     </div>
                                 </form>
@@ -199,7 +198,8 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                             <!-- /.modal-dialog -->
                         </div>
-                    <?php } while ($row_productos = $productos->fetch(PDO::FETCH_ASSOC)); ?>
+                    <?php } ?>
+
                     </tbody>
                 </table>
                 <!-- /.table-responsive -->
