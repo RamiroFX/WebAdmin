@@ -78,12 +78,41 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                     <a data-toggle="modal" class="btn btn-warning" data-target ="#editarProducto<?php echo $link['ID']; ?>">
                                         <i class="fa fa-pencil-square-o"></i>
                                     </a>
-                                    <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                    <a data-toggle="modal" class="btn btn-danger" data-target ="#eliminarProducto<?php echo $link['ID']; ?>">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
                                 </td>
                             </tr>
+                            <!--Modal eliminar producto-->
+                        <div class="modal fade" id="eliminarProducto<?php echo $link['ID']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <form name="form_delete_product<?php echo $link['ID']; ?>" id="form_delete_product<?php echo $link['ID']; ?>">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Eliminar producto</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    Seguro que desea eliminar el producto:<strong><?php echo $link['descripcion']; ?></strong> ?
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                            <button type="button" onclick="eliminarProducto('<?php echo $link['ID']; ?>')" class="btn btn-danger" id="botonEliminar">Eliminar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </div>
+                        <!--Modal editar producto-->
                         <div class="modal fade" id="editarProducto<?php echo $link['ID']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
-                                <form name="form_update_product<?php echo $link['ID']; ?>" id="form_update_product<?php echo $link['ID']; ?>"  >
+                                <form name="form_update_product<?php echo $link['ID']; ?>" id="form_update_product<?php echo $link['ID']; ?>">
                                     <div class="modal-content">
                                         <div class="modal-header bg-primary">
                                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -212,9 +241,9 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
 </div>
 <!-- Page-Level Demo Scripts - Tables - Use for reference -->
 <script>
-    $(document).ready(function () {
-        $('#dataTables-example').DataTable({
-            responsive: true
-        });
-    });
+                                            $(document).ready(function() {
+                                                $('#dataTables-example').DataTable({
+                                                    responsive: true
+                                                });
+                                            });
 </script>

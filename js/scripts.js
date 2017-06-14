@@ -1,4 +1,4 @@
-$('#agregarProducto').on('hidden.bs.modal', function (e) {
+$('#agregarProducto').on('hidden.bs.modal', function(e) {
     $('#C_DESCRIPCION').val('');
     $('#C_CODIGO').val('');
     $('#C_ID_MARCA').val('');
@@ -14,9 +14,13 @@ function verProducto() {
     $.ajax({
         type: 'GET',
         url: "includes/verProductos.php"
-    }).done(function (msg) {
+    }).done(function(msg) {
+        //$("#barra_progreso").show();
         $("#verProductos").html(msg);
+        $("#barra_progreso").hide();
     });
+
+
 }
 
 $('#form_add_product').validate({
@@ -102,7 +106,7 @@ $('#form_add_product').validate({
             number: "Por favor, ingrese solo números"
         }
     },
-    submitHandler: function (form) {
+    submitHandler: function(form) {
         var dataString = 'C_DESCRIPCION=' + $('#C_DESCRIPCION').val()
                 + '&C_CODIGO=' + $('#C_CODIGO').val()
                 //+ '&ID_ESTADO=' + $('#ID_ESTADO').val()
@@ -118,10 +122,12 @@ $('#form_add_product').validate({
             type: "POST",
             url: "includes/agregarProducto.php",
             data: dataString
-        }).done(function (data) {
+        }).done(function(data) {
+            //$("#barra_progreso").show();
             $("#agregarProducto").modal("hide");
             $("#info").html(data);
             verProducto();
+            $("#barra_progreso").hide();
         });
     }
 });
@@ -153,10 +159,28 @@ function actualizarProducto(idProducto) {
         type: "POST",
         url: "includes/modificarProducto.php",
         data: dataString
-    }).done(function (data) {
+    }).done(function(data) {
+        //$("#barra_progreso").show();
         $("#info").html(data);
         $("body").removeClass(".modal-open");
         $(".modal-backdrop").remove();
         verProducto();
+        $("#barra_progreso").hide();
+    });
+}
+
+function eliminarProducto(idProducto) {
+    var dataString = 'ID_PRODUCTO=' + idProducto
+            + '&eliminar_producto=3';
+    $.ajax({
+        type: "POST",
+        url: "includes/eliminarProducto.php",
+        data: dataString
+    }).done(function(data) {
+        $("#info").html(data);
+        $("body").removeClass(".modal-open");
+        $(".modal-backdrop").remove();
+        verProducto();
+        $("#barra_progreso").hide();
     });
 }

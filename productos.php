@@ -69,6 +69,7 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Custom CSS -->
         <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+        <link href="dist/css/fileinput.min.css" rel="stylesheet" type="text/css">
 
         <!-- Custom Fonts -->
         <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -101,6 +102,14 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
+                <div class="col-lg-12">
+                    <div id="barra_progreso" class="row progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar"
+                             aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                            Cargando...
+                        </div>
+                    </div> 
+                </div> 
                 <div id="verProductos"></div>
 
             </div>
@@ -230,6 +239,7 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
         <!-- Custom Theme JavaScript -->
         <script src="dist/js/sb-admin-2.js"></script>
 
+        <script src="dist/js/fileinput.min.js"></script>
         <script src="validate/jquery.validate.js"></script>
 
         <script src="js/scripts.js"></script>
