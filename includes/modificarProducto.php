@@ -1,7 +1,7 @@
 <?php require_once '../Connections/conex2.php'; ?>
 <?php
 
-if ((isset($_POST['modificar_producto'])) && ($_POST['modificar_producto'] == 1)) {
+if ((isset($_POST['modificar_producto'])) && ($_POST['modificar_producto'] == 2)) {
 
     $ID_PRODUCTO = $_POST['ID_PRODUCTO'];
     $DESCRIPCION = $_POST['DESCRIPCION'];

@@ -128,34 +128,35 @@ $('#form_add_product').validate({
 
 function actualizarProducto(idProducto) {
     var ID_PRODUCTO = idProducto;
-    var DESCRIPCION = $('#DESCRIPCION'+idProducto).val();
-    var CODIGO = $('#CODIGO'+idProducto).val();
-    var ID_MARCA = $('#ID_MARCA'+idProducto).val();
-    var ID_IMPUESTO = $('#ID_IMPUESTO'+idProducto).val();
-    var ID_CATEGORIA = $('#ID_CATEGORIA'+idProducto).val();
-    var PRECIO_COSTO = $('#PRECIO_COSTO'+idProducto).val();
-    var PRECIO_MINORISTA = $('#PRECIO_MINORISTA'+idProducto).val();
-    var PRECIO_MAYORISTA = $('#PRECIO_MAYORISTA'+idProducto).val();
-    var CANT_ACTUAL = $('#CANT_ACTUAL'+idProducto).val();
-    var dataString = 'C_DESCRIPCION=' + DESCRIPCION
-            + '&C_CODIGO=' + CODIGO
+    var DESCRIPCION = $('#DESCRIPCION' + idProducto).val();
+    var CODIGO = $('#CODIGO' + idProducto).val();
+    var ID_MARCA = $('#ID_MARCA' + idProducto).val();
+    var ID_IMPUESTO = $('#ID_IMPUESTO' + idProducto).val();
+    var ID_CATEGORIA = $('#ID_CATEGORIA' + idProducto).val();
+    var PRECIO_COSTO = $('#PRECIO_COSTO' + idProducto).val();
+    var PRECIO_MINORISTA = $('#PRECIO_MINORISTA' + idProducto).val();
+    var PRECIO_MAYORISTA = $('#PRECIO_MAYORISTA' + idProducto).val();
+    var CANT_ACTUAL = $('#CANT_ACTUAL' + idProducto).val();
+    var dataString = 'DESCRIPCION=' + DESCRIPCION
+            + '&CODIGO=' + CODIGO
             //+ '&ID_ESTADO=' + $('#ID_ESTADO').val()
-            + '&C_ID_MARCA=' + ID_MARCA
-            + '&C_ID_IMPUESTO=' + ID_IMPUESTO
-            + '&C_ID_CATEGORIA=' + ID_CATEGORIA
-            + '&C_PRECIO_COSTO=' + PRECIO_COSTO
-            + '&C_PRECIO_MINORISTA=' + PRECIO_MINORISTA
-            + '&C_PRECIO_MAYORISTA=' + PRECIO_MAYORISTA
-            + '&C_CANT_ACTUAL=' + CANT_ACTUAL
+            + '&ID_MARCA=' + ID_MARCA
+            + '&ID_IMPUESTO=' + ID_IMPUESTO
+            + '&ID_CATEGORIA=' + ID_CATEGORIA
+            + '&PRECIO_COSTO=' + PRECIO_COSTO
+            + '&PRECIO_MINORISTA=' + PRECIO_MINORISTA
+            + '&PRECIO_MAYORISTA=' + PRECIO_MAYORISTA
+            + '&CANT_ACTUAL=' + CANT_ACTUAL
             + '&ID_PRODUCTO=' + ID_PRODUCTO
-            + '&modificar_producto=1';
-    /*$.ajax({
-     type: "POST",
-     url: "includes/modificarProducto.php",
-     data: dataString
-     }).done(function(data) {
-     $("#editarProducto").modal("hide");
-     $("#info").html(data);
-     verProducto();
-     });*/
+            + '&modificar_producto=2';
+    $.ajax({
+        type: "POST",
+        url: "includes/modificarProducto.php",
+        data: dataString
+    }).done(function (data) {
+        $("#info").html(data);
+        $("body").removeClass(".modal-open");
+        $(".modal-backdrop").remove();
+        verProducto();
+    });
 }
