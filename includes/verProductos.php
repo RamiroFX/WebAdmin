@@ -74,7 +74,9 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                                         </form>
                                     <?php } ?></td>
                                 <td class="center">
-                                    <button type="button" class="btn btn-info"><i class="fa fa-file-image-o"></i></button>
+                                    <a href="agregarImagen.php?idProducto=<?php echo $link['ID']; ?>" class="btn btn-info">
+                                        <i class="fa fa-file-image-o"></i>
+                                    </a>
                                     <a data-toggle="modal" class="btn btn-warning" data-target ="#editarProducto<?php echo $link['ID']; ?>">
                                         <i class="fa fa-pencil-square-o"></i>
                                     </a>
@@ -241,9 +243,9 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
 </div>
 <!-- Page-Level Demo Scripts - Tables - Use for reference -->
 <script>
-                                            $(document).ready(function() {
-                                                $('#dataTables-example').DataTable({
-                                                    responsive: true
-                                                });
-                                            });
+    $(document).ready(function () {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
 </script>
