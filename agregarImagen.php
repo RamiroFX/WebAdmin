@@ -59,7 +59,7 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
 
         <!-- Custom CSS -->
         <link href="dist/css/sb-admin-2.css" rel="stylesheet">
-        <link href="../dist/css/fileinput.min.css" rel="stylesheet" type="text/css">
+        <link href="dist/css/fileinput.min.css" rel="stylesheet" type="text/css">
 
         <!-- Custom Fonts -->
         <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -84,9 +84,9 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Agregar imágenes</h1>
-                        <div class="form-control">
-                            <form action="" enctype="multipart/form-data">
-                                <input name="imagenes[]" type="file" multiple="true" class="file-loading">
+                        <div class="form-group">
+                            <form enctype="multipart/form-data">
+                                <input id="archivos" name="imagenes[]" type="file" multiple="true" class="file-loading">
                             </form>
                         </div>
                     </div>
@@ -113,15 +113,49 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
         <!-- Custom Theme JavaScript -->
         <script src="dist/js/sb-admin-2.js"></script>
 
-        <script src="../dist/js/fileinput.min.js"></script>
+        <script src="dist/js/fileinput.min.js"></script>
         <script>
             $('#archivos').fileinput({
-                uploadUrl:"includes/upload.php?producto=<?php $_GET["idProducto"];?>",
-                uploadAsync:false,
-                uploadMin:1,
-                uploadMax:3,
-                allowedFileExtensions:["jpg"],
-                
+                uploadUrl: "includes/upload.php?producto=<?php $_GET["idProducto"]; ?>",
+                uploadAsync: false,
+                language: "es",
+                uploadMin: 1,
+                uploadMax: 3,
+                showRemove: false,
+                showUpload: false,
+                allowedFileExtensions: ["jpg"],
+<?php
+$SQL_IMAGENES = "SELECT * FROM PRODUCTO_IMAGENES WHERE ID_PRODUCTO_IMAGENES = ?";
+$stmt = $conex->prepare($SQL_IMAGENES);
+$stmt->execute([$_GET["idProducto"]]);
+$stmt->fetchAll(PDO::FETCH_ASSOC);
+if ($stmt) {
+    foreach ($stmt as $value) {
+        require_once 'includes/class.imgsizer.php';
+        $imgSizer = new imgSizer();
+        $imgSizer->type = "width";
+        $imgSizer->max = 160;
+        $imgSizer->quality = 8;
+        $imgSizer->square = true;
+        $imgSizer->prefix = "miniatura_";
+        $imgSizer->folder = "_min";
+        $imgSizer->image = "webadmin/imagenes/productos/" . $value['imagen'];
+        $imgSizer->resize();
+        echo'<img src=\'webadmin/imagenes/productos/_min/miniatura_\'' . $value['imagen'] . ' height=\'120px\' class=\'file-preview-image\'>';
+    }
+}
+?>
+                initialPreviewConfig: [
+<?php
+foreach ($stmt as $value) {
+    $infoImagenes = $value['imagen'];
+    $idImagen = $value['id_producto_imagenes'];
+    echo"{caption: \"" . $infoImagenes . ". height:\"120px\", url: \"includes/borrar.php\", key: " . $idImagen . "\"}";
+}
+?>
+                ]
+            }).on("filebatchselected", function(event, files) {
+                $("#archivos").fileinput("upload");
             });
         </script>
 
