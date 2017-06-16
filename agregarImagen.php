@@ -140,9 +140,9 @@ if ($stmt) {
         $imgSizer->square = true;
         $imgSizer->prefix = "miniatura_";
         $imgSizer->folder = "_min";
-        $imgSizer->image = "webadmin/imagenes/productos/" . $value['imagen'];
+        $imgSizer->image = "/webadmin/imagenes/productos/" . $value['imagen'];
         $imgSizer->resize();
-        echo'<img src=\'webadmin/imagenes/productos/_min/miniatura_\'' . $value['imagen'] . ' height=\'120px\' class=\'file-preview-image\'>';
+        echo"<img src=\'/webadmin/imagenes/productos/_min/miniatura_" . $value['imagen'] . ' height=\'120px\' class=\'file-preview-image\'>';
     }
 }
 ?>

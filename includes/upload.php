@@ -1,4 +1,7 @@
-<?php require_once("../Connections/conex2.php"); ?>
+<?php require_once("../Connections/conex2.php");
+require_once '../includes/class.imgsizer.php';
+?>
+
 <?php
 
 $carpeta = "../imagenes/productos";
@@ -14,8 +17,27 @@ for ($index = 0; $index < $imagenes; $index++) {
     $extension = "jpg";
 
     $nombreArchivo = $imagen . "." . $extension;
-    
-    $SQL_INSERT="INSERT INTO producto_imagenes(id_producto, imagen)VALUES (:id_producto, :imagen)";
+    $ruta = $carpeta . $nombreArchivo;
+
+    $SQL_INSERT = "INSERT INTO producto_imagenes(id_producto, imagen)VALUES (:id_producto, :imagen)";
     $resultado = $conex->prepare($SQL_INSERT)->execute([$idProducto, $nombreArchivo]);
+
+    move_uploaded_file($nombreTemporal, $ruta);
+    $imgSizer = new imgSizer();
+    $imgSizer->type = "width";
+    $imgSizer->max = 160;
+    $imgSizer->quality = 8;
+    $imgSizer->square = true;
+    $imgSizer->prefix = "miniatura_";
+    $imgSizer->folder = "_min";
+    $imgSizer->image = "/webadmin/imagenes/productos/" . $nombreArchivo;
+    $imgSizer->resize();
+
+    $infoImagenesSubidas[$index] = array("height" => "120px");
+    $imagenesSubidas[$index] = '<img src=\'/webadmin/imagenes/productos/_min/miniatura_' . $nombreArchivo . ' height=\'120px\' class=\'file-preview-image\'>';
 }
+$arr = array("file_id" => 0, "overwriteInitial" => true, "initialPreviewConfig" => $infoImagenesSubidas,
+    "initialPreview" => $imagenesSubidas);
+
+json_encode($arr);
 ?>
