@@ -31,6 +31,7 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
     header("Location: " . $MM_restrictGoTo);
     exit();
 }
+$idProducto = filter_input(INPUT_GET, 'idProducto', FILTER_SANITIZE_NUMBER_INT);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,7 +87,7 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
                         <h1 class="page-header">Agregar imágenes</h1>
                         <div class="form-group">
                             <form enctype="multipart/form-data">
-                                <input id="archivos" name="imagenes[]" type="file" multiple="true" class="file-loading">
+                                <input id="archivos" name="imagenes[]" type="file" multiple=true class="file-loading">
                             </form>
                         </div>
                     </div>
@@ -115,8 +116,8 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
 
         <script src="dist/js/fileinput.min.js"></script>
         <script>
-            $('#archivos').fileinput({
-                uploadUrl: "includes/upload.php?producto=<?php $_GET["idProducto"]; ?>",
+            $('#archivos').fileinput({                
+                uploadUrl: "includes/upload.php?idProducto=<?php echo $idProducto ?>",
                 uploadAsync: false,
                 language: "es",
                 uploadMin: 1,
@@ -127,7 +128,7 @@ if (!((isset($_SESSION['MM_idAdmin'])) &&
 <?php
 $SQL_IMAGENES = "SELECT * FROM PRODUCTO_IMAGENES WHERE ID_PRODUCTO_IMAGENES = ?";
 $stmt = $conex->prepare($SQL_IMAGENES);
-$stmt->execute([$_GET["idProducto"]]);
+$stmt->execute([$idProducto]);
 $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($stmt) {
     foreach ($stmt as $value) {
