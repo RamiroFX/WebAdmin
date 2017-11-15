@@ -1,38 +1,8 @@
-<?php require_once("Connections/conex2.php"); ?>
 <?php
-if (!isset($_SESSION)) {
-    session_start();
-}
-$MM_authorizedUsers = "";
-$MM_doNotCheckAccess = "true";
+define('root', $_SERVER['DOCUMENT_ROOT'] . '/WebAdmin/');
+include(root . 'includes/validador.php');
+include(root . 'connection/connection.php');
 
-function isAuthorized($strUsers, $strGroups, $userName, $userGroup) {
-    $isValid = FALSE;
-
-    if (!empty($userName)) {
-        $arrUsers = explode(",", $strUsers);
-        $arrGroups = explode(",", $strGroups);
-        if (in_array($userName, $arrUsers)) {
-            $isValid = TRUE;
-        }
-        if (in_array($userGroup, $arrGroups)) {
-            $isValid = TRUE;
-        }
-        if (($strUsers == "") && TRUE) {
-            $isValid = TRUE;
-        }
-    }
-    return $isValid;
-}
-
-$MM_restrictGoTo = "error.php?error=1";
-if (!((isset($_SESSION['MM_idAdmin'])) &&
-        (isAuthorized("", $MM_authorizedUsers, $_SESSION['MM_idAdmin'], $_SESSION['MM_idAdmin'])))) {
-    header("Location: " . $MM_restrictGoTo);
-    exit();
-}
-?>
-<?php
 $SQL_CATEGORIA = "SELECT * FROM PRODUCTO_CATEGORIA ORDER BY ID_PRODUCTO_CATEGORIA ASC";
 $productos_CATEGORIA = $conex->query($SQL_CATEGORIA)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -117,9 +87,9 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
 
         </div>
         <!-- /#wrapper -->
-        <div class="modal fade" id="agregarProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade" id="modal_agregarProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form name="form_add_product" id="form_add_product" >
+                <form name="form_agregarProducto" id="form_agregarProducto" >
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -214,7 +184,7 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary" id="agregar">Guardar</button>
+                            <button type="submit" class="btn btn-primary" id="btn_agregarProducto">Guardar</button>
                         </div>
                     </div>
                 </form>
