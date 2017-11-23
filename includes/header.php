@@ -12,7 +12,7 @@
 
     <ul class="nav navbar-top-links navbar-right">
         <li>
-            Bienvenido, <strong><?php echo obtenerNombreUsuario($_SESSION['MM_idAdmin']); ?></strong>
+            Bienvenido, <strong><?php echo( $_SESSION['MS_USER_NAME']); ?></strong>
         </li>
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">

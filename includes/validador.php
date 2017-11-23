@@ -29,7 +29,7 @@ session_start();
       } 
       return $isValid; 
     }
-    $MM_restrictGoTo = "error.php?error=1";
+    $MM_restrictGoTo = "login.php";
     /*if($paginaAct == 'index.php'){
         $MM_restrictGoTo = "login.php";   
         $MM_restrictGoTo = "error.php?error=1";

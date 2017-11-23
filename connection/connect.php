@@ -14,12 +14,3 @@ try {
     die();
 }
 ?>
-
-<?php
-
-if (is_file("includes/funciones2.php")) {
-    include("includes/funciones2.php");
-} else {
-    include("../includes/funciones2.php");
-}
-?>

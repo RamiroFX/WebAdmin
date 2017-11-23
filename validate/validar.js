@@ -1,48 +1,51 @@
 $(function () {
     var timeSlide = 1000;
-
-    $('#accesoadmin').validate({
+    $('#form_login').validate({
         rules: {
-            "email": {
-                "required": true,
-                "email": true,
+            user: {
+                required: true,
+                rangelength: [2, 10]
             },
-            "password": {
-                "required": true,
-                "minlength": "6",
-            },
+            password: {
+                required: true,
+                minlength: 6
+            }
         },
         messages: {
-            "email": {
-                "required": "Ingrese su e-mail",
-                "email": "E-mail inválido",
+            user: {
+                required: "Por favor, ingrese usuario de login.",
+                rangelength: "Mínino 2 Y máximo 10 caracteres."
             },
-            "password": {
-                "required": "Ingrese su contraseña",
-                "minlength": "Mínino 6 caracteres",
-            },
+            password: {
+                required: "Ingrese su contraseña.",
+                minlength: "Mínino 6 caracteres."
+            }
         },
         submitHandler: function (form) {
             $('.alert-success, .alert-danger, .alert-info, .alert-warning').slideUp(timeSlide);
-
-            var dataString = 'email=' + $('#email').val() + '&password=' + $('#password').val() + '&formid=1';
+            var dataString = $('#form_login').serialize();
+            var url = 'includes/login/loginController.php';
+            var urlPREV = $('#prevURL').val();
             $.ajax({
                 type: "POST",
-                url: "includes/conectar2.php",
+                url: url,
                 data: dataString,
                 success: function (msj) {
                     if (msj == 1) {
-                        $(form).find("#btn-ingresar").html('Ingresando...').prop('disabled', 'disabled');
+                        $(form).find("#btn_ingresar").html('Ingresando...').prop('disabled', 'disabled');
                         $('#alertBoxes').html('<div class="alert alert-success"></div>');
                         $('.alert-success').hide(0).html("Espera un momento...");
                         $('.alert-success').slideDown(timeSlide);
-                        setTimeout(function () {
-                            window.location.href = "home.php";
-                        }, (timeSlide + 1000));
+                            if(urlPREV == 0) {
+                                setTimeout(function () {
+                                    window.location.href = "home.php";
+                                }, (timeSlide + 1000));   
+                            }else{
+                                setTimeout(function () {
+                                    window.location.href = urlPREV;
+                                }, (timeSlide + 1000));  
+                            }
                     } else {
-                        /*$('#alertBoxes').html('<div class="alert alert-danger"></div>');
-                         $('.alert-danger').hide(0).html("Error al intentar acceder");
-                         $('.alert-success').slideDown(timeSlide);*/
                         $('#alertBoxes').html('<div class="alert alert-danger"></div>');
                         $('.alert-danger').hide(0).html("Error al intentar acceder");
                         $('.alert-danger').slideDown(timeSlide).slideUp(timeSlide * 3);

@@ -2,7 +2,7 @@
 
 define('root', $_SERVER['DOCUMENT_ROOT'] . '/WebAdmin/');
 include(root . 'includes/validador.php');
-include(root . 'connection/connection.php');
+include(root . 'connection/connect.php');
 
 $id = $_POST['id'];
 //OBTENEMOS LOS VALORES DEL PRODUCTO

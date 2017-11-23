@@ -1,13 +1,94 @@
-$('#agregarProducto').on('hidden.bs.modal', function (e) {
-    $('#C_DESCRIPCION').val('');
-    $('#C_CODIGO').val('');
-    $('#C_ID_MARCA').val('');
-    $('#C_ID_IMPUESTO').val('');
-    $('#C_ID_CATEGORIA').val('');
-    $('#C_PRECIO_COSTO').val('');
-    $('#C_PRECIO_MINORISTA').val('');
-    $('#C_PRECIO_MAYORISTA').val('');
-    $('#C_CANT_ACTUAL').val('');
+$('#btn_agregarProducto').validate({
+    rules: {
+        C_DESCRIPCION: {
+            required: true,
+            rangelength: [2, 50]
+        },
+        C_CODIGO: {
+            rangelength: [2, 30]
+        },
+        C_PRECIO_MINORISTA: {
+            required: true,
+            number: true
+        },
+        C_PRECIO_COSTO: {
+            required: true,
+            number: true
+        },
+        C_PRECIO_MAYORISTA: {
+            required: true,
+            number: true
+        },
+        C_CANT_ACTUAL: {
+            required: true,
+            number: true
+        },
+        C_ID_CATEGORIA: {
+            required: true,
+            number: true
+        },
+        C_ID_MARCA: {
+            required: true,
+            number: true
+        },
+        C_ID_IMPUESTO: {
+            required: true,
+            number: true
+        }
+    },
+    messages: {
+        C_DESCRIPCION: {
+            required: "Ingrese el nombre del producto",
+            rangelength: "Por favor, ingrese un valor entre 2 y 50 caracteres"
+        },
+        C_CODIGO: {
+            rangelength: "Por favor, ingrese un valor entre 2 y 30 caracteres"
+        },
+        C_PRECIO_MINORISTA: {
+            required: "Ingrese el precio de venta",
+            number: "Por favor, ingrese solo números"
+        },
+        C_PRECIO_COSTO: {
+            required: "Ingrese el precio de costo",
+            number: "Por favor, ingrese solo números"
+        },
+        C_PRECIO_MAYORISTA: {
+            required: "Ingrese el precio mayorista",
+            number: "Por favor, ingrese solo números"
+        },
+        C_CANT_ACTUAL: {
+            required: "Ingrese el stock inicial",
+            number: "Por favor, ingrese solo números"
+        },
+        C_ID_CATEGORIA: {
+            required: "Seleccione una categoría",
+            number: "Por favor, ingrese solo números"
+        },
+        C_ID_MARCA: {
+            required: "Seleccione una marca",
+            number: "Por favor, ingrese solo números"
+        },
+        C_ID_IMPUESTO: {
+            required: "Seleccione un impuesto",
+            number: "Por favor, ingrese solo números"
+        }
+    },
+    submitHandler: function (form) {
+        $("#barra_progreso").show();
+        var dataString = $('#form_agregarProducto').serialize();
+        $.ajax({
+            type: "POST",
+            url: "includes/producto/agregarProducto.php",
+            data: dataString
+        }).done(function (data) {
+            $("#barra_progreso").hide();
+            $("#modal_agregarProducto").modal("hide");
+            $("#info").html(data);
+            $('#form_agregarProducto')[0].reset();
+            verProducto();
+        });
+        return;
+    }
 });
 
 $('#btn_modificarProducto').validate({
@@ -35,9 +116,9 @@ $('#btn_modificarProducto').validate({
             number: true
         },
         M_PROD_ID_ESTADO: {
-         required: true,
-         number: true
-         },
+            required: true,
+            number: true
+        },
         M_PROD_ID_CATEGORIA: {
             required: true,
             number: true
@@ -77,7 +158,7 @@ $('#btn_modificarProducto').validate({
         M_PROD_ID_ESTADO: {
             required: "Seleccione un estado",
             number: "Por favor, ingrese solo números"
-         },
+        },
         M_PROD_ID_CATEGORIA: {
             required: "Seleccione una categoría",
             number: "Por favor, ingrese solo números"
@@ -92,141 +173,34 @@ $('#btn_modificarProducto').validate({
         }
     },
     submitHandler: function (form) {
+        $("#barra_progreso").show();
         var dataString = $('#form_modificarProducto').serialize();
         $.ajax({
             type: "POST",
-            url: "includes/modificarProducto.php",
+            url: "includes/producto/modificarProducto.php",
             data: dataString
         }).done(function (data) {
+            $("#barra_progreso").hide();
             $("#modal_modificarProducto").modal("hide");
             $("#info").html(data);
+            $('#form_modificarProducto')[0].reset();
             verProducto();
-            $("#barra_progreso").hide();
         });
+        return;
     }
 });
 
 function verProducto() {
     $.ajax({
         type: 'GET',
-        url: "includes/verProductos.php"
+        url: "includes/producto/verProductos.php"
     }).done(function (msg) {
-        //$("#barra_progreso").show();
         $("#verProductos").html(msg);
         $("#barra_progreso").hide();
     });
 
 
 }
-
-$('#form_agregarProducto').validate({
-    rules: {
-        C_DESCRIPCION: {
-            required: true,
-            rangelength: [2, 50]
-        },
-        C_CODIGO: {
-            rangelength: [2, 30]
-        },
-        C_PRECIO_MINORISTA: {
-            required: true,
-            number: true
-        },
-        C_PRECIO_COSTO: {
-            required: true,
-            number: true
-        },
-        C_PRECIO_MAYORISTA: {
-            required: true,
-            number: true
-        },
-        C_CANT_ACTUAL: {
-            required: true,
-            number: true
-        },
-        /*ID_ESTADO: {
-         required: true,
-         number: true
-         },*/
-        C_ID_CATEGORIA: {
-            required: true,
-            number: true
-        },
-        C_ID_MARCA: {
-            required: true,
-            number: true
-        },
-        C_ID_IMPUESTO: {
-            required: true,
-            number: true
-        }
-    },
-    messages: {
-        C_DESCRIPCION: {
-            required: "Ingrese el nombre del producto",
-            rangelength: "Por favor, ingrese un valor entre 2 y 50 caracteres"
-        },
-        C_CODIGO: {
-            rangelength: "Por favor, ingrese un valor entre 2 y 30 caracteres"
-        },
-        C_PRECIO_MINORISTA: {
-            required: "Ingrese el precio de venta",
-            number: "Por favor, ingrese solo números"
-        },
-        C_PRECIO_COSTO: {
-            required: "Ingrese el precio de costo",
-            number: "Por favor, ingrese solo números"
-        },
-        C_PRECIO_MAYORISTA: {
-            required: "Ingrese el precio mayorista",
-            number: "Por favor, ingrese solo números"
-        },
-        C_CANT_ACTUAL: {
-            required: "Ingrese el stock inicial",
-            number: "Por favor, ingrese solo números"
-        },
-        /*ID_ESTADO: {
-         required: "Seleccione un estado",
-         number: "Por favor, ingrese solo números"
-         },*/
-        C_ID_CATEGORIA: {
-            required: "Seleccione una categoría",
-            number: "Por favor, ingrese solo números"
-        },
-        C_ID_MARCA: {
-            required: "Seleccione una marca",
-            number: "Por favor, ingrese solo números"
-        },
-        C_ID_IMPUESTO: {
-            required: "Seleccione un impuesto",
-            number: "Por favor, ingrese solo números"
-        }
-    },
-    submitHandler: function (form) {
-        var dataString = 'C_DESCRIPCION=' + $('#C_DESCRIPCION').val()
-                + '&C_CODIGO=' + $('#C_CODIGO').val()
-                //+ '&ID_ESTADO=' + $('#ID_ESTADO').val()
-                + '&C_ID_MARCA=' + $('#C_ID_MARCA').val()
-                + '&C_ID_IMPUESTO=' + $('#C_ID_IMPUESTO').val()
-                + '&C_ID_CATEGORIA=' + $('#C_ID_CATEGORIA').val()
-                + '&C_PRECIO_COSTO=' + $('#C_PRECIO_COSTO').val()
-                + '&C_PRECIO_MINORISTA=' + $('#C_PRECIO_MINORISTA').val()
-                + '&C_PRECIO_MAYORISTA=' + $('#C_PRECIO_MAYORISTA').val()
-                + '&C_CANT_ACTUAL=' + $('#C_CANT_ACTUAL').val()
-                + '&agregar_producto=1';
-        $.ajax({
-            type: "POST",
-            url: "includes/agregarProducto.php",
-            data: dataString
-        }).done(function (data) {
-            //$("#barra_progreso").show();
-            $("#agregarProducto").modal("hide");
-            $("#info").html(data);
-            verProducto();
-            $("#barra_progreso").hide();
-        });
-    }
-});
 
 function llamarFormularioModificarProducto(idProducto) {
     var url = "php/llamarRegistroProducto.php";
@@ -248,9 +222,9 @@ function llamarFormularioModificarProducto(idProducto) {
         $('#M_PROD_PRECIO_MAYORISTA').val(datos[9]);
         $('#M_PROD_CANT_ACTUAL').val(datos[10]);
         $('#modal_modificarProducto').modal({
-                show: true,
-                backdrop: 'static'
-            });
+            show: true,
+            backdrop: 'static'
+        });
     });
 }
 
@@ -275,8 +249,8 @@ function eliminarProducto(idProducto) {
         $('#M_PROD_PRECIO_MAYORISTA').val(datos[9]);
         $('#M_PROD_CANT_ACTUAL').val(datos[10]);
         $('#modal_modificarProducto').modal({
-                show: true,
-                backdrop: 'static'
-            });
+            show: true,
+            backdrop: 'static'
+        });
     });
 }
