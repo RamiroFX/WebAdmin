@@ -1,5 +1,9 @@
-<?php require_once '../Connections/conex2.php'; ?>
 <?php
+
+define('root', $_SERVER['DOCUMENT_ROOT'] . '/WebAdmin/');
+include(root . 'includes/validador.php');
+include(root . 'connection/connect.php');
+
 
 if ((isset($_POST['agregar_producto'])) && ($_POST['agregar_producto'] == 1)) {
 

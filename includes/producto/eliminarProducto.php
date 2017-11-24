@@ -1,9 +1,12 @@
-<?php require_once '../Connections/conex2.php'; ?>
 <?php
 
-if ((isset($_POST['eliminar_producto'])) && ($_POST['eliminar_producto'] == 3)) {
+define('root', $_SERVER['DOCUMENT_ROOT'] . '/WebAdmin/');
+include(root . 'includes/validador.php');
+include(root . 'connection/connect.php');
 
-    $ID_PRODUCTO = $_POST['ID_PRODUCTO'];
+if ((isset($_POST['E_PROD_ID'])) && ($_POST['eliminar_producto'] == 1)) {
+
+    $ID_PRODUCTO = $_POST['E_PROD_ID'];
     $SQL_DELETE = "DELETE FROM PRODUCTO WHERE ID_PRODUCTO = :ID_PRODUCTO";
     $resultado = $conex->prepare($SQL_DELETE)->execute([$ID_PRODUCTO]);
 
