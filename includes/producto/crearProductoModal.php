@@ -1,11 +1,11 @@
-<!--Modal agregar producto-->
-<div class="modal fade" id="modal_agregarProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--Modal crear producto-->
+<div class="modal fade" id="modal_crearProducto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form name="form_agregarProducto" id="form_agregarProducto" >
+                <form name="form_crearProducto" id="form_crearProducto" >
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Agregar producto</h4>
+                            <h4 class="modal-title" id="myModalLabel">Crear producto</h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -95,8 +95,9 @@
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <input type="hidden" value="1" name="crear_producto"/>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary" id="btn_agregarProducto">Guardar</button>
+                            <button type="submit" class="btn btn-primary" id="btn_crearProducto">Guardar</button>
                         </div>
                     </div>
                 </form>

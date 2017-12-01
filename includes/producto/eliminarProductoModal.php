@@ -12,13 +12,14 @@
                         <div class="col-lg-12">
                             ¿Seguro que desea eliminar el producto?:
                         </div>
-                        <input readonly class="form-control" name="E_PROD_NOMBRE" id="E_PROD_NOMBRE">
+                        <input readonly class="form-control" name="E_PROD_DESCRIPCION" id="E_PROD_DESCRIPCION">
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input type="hidden" value="1" name="eliminar_producto" id="eliminar_producto"/>
                     <input type="hidden" value="" name="E_PROD_ID" id="E_PROD_ID"/>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-danger" id="btn_eliminarProducto">Eliminar</button>
+                    <button type="submit" class="btn btn-danger" id="btn_eliminarProducto">Eliminar</button>
                 </div>
             </div>
         </form>

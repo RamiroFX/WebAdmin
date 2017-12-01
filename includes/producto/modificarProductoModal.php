@@ -110,7 +110,7 @@
                     <input type="hidden" value="1" name="modificar_producto"/>
                     <input type="hidden" value="" name="M_PROD_ID" id="M_PROD_ID"/>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="btn_modificarProducto">Modificar</button>
+                    <button type="submit" class="btn btn-primary" id="btn_modificarProducto">Modificar</button>
                 </div>
             </div>
         </form>

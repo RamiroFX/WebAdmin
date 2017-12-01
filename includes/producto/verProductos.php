@@ -102,9 +102,7 @@ $productos_IMPUESTO = $conex->query($SQL_IMPUESTO)->fetchAll(PDO::FETCH_ASSOC);
     <!-- /.col-lg-12 -->
 </div>
 <script>
-    $(document).ready(function () {
-        $('#dataTables-example').DataTable({
-            responsive: true
-        });
+    $('#dataTables-example').DataTable({
+        responsive: true
     });
 </script>

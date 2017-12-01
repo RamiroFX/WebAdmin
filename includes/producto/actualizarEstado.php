@@ -10,7 +10,7 @@ if ((isset($_POST['actualiza'])) && ($_POST['actualiza'] == "1")) {
     $SQL = "UPDATE  PRODUCTO SET ID_ESTADO = :id_estado WHERE ID_PRODUCTO = :id_producto";
     $conex->prepare($SQL)->execute([$id_estado, $id_producto]);
 
-    $updateToGo = "productos.php";
+    $updateToGo = "../../productos.php";
     header(sprintf("Location: %s", $updateToGo));
 }
 ?>
